@@ -1,0 +1,28 @@
+{
+  "name": "tasks-iframe-prototype",
+  "private": true,
+  "version": "0.1.0",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "concurrently -n host,iframe -c blue,green \"npm run dev --workspace @groundtruth/host-app\" \"npm run dev --workspace @groundtruth/iframe-app\"",
+    "dev:host": "npm run dev --workspace @groundtruth/host-app",
+    "dev:iframe": "npm run dev --workspace @groundtruth/iframe-app",
+    "build": "npm run build --workspaces --if-present",
+    "test": "npm run test --workspaces --if-present",
+    "test:unit": "npm run test:unit --workspaces --if-present",
+    "test:e2e": "npm run test:e2e --workspace @groundtruth/host-app",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "lint": "npm run lint --workspaces --if-present"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.22.0",
+    "concurrently": "^9.2.1",
+    "eslint": "^9.22.0",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "globals": "^15.15.0",
+    "typescript-eslint": "^8.26.1"
+  }
+}

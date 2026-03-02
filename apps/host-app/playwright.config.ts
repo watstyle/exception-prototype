@@ -1,0 +1,31 @@
+import { defineConfig, devices } from "@playwright/test";
+
+export default defineConfig({
+  testDir: "./tests/e2e",
+  fullyParallel: true,
+  timeout: 30_000,
+  use: {
+    baseURL: "http://localhost:5173",
+    trace: "on-first-retry"
+  },
+  projects: [
+    {
+      name: "chromium",
+      use: { ...devices["Desktop Chrome"] }
+    }
+  ],
+  webServer: [
+    {
+      command: "npm run dev --workspace @groundtruth/iframe-app",
+      port: 5174,
+      reuseExistingServer: true,
+      timeout: 120_000
+    },
+    {
+      command: "npm run dev --workspace @groundtruth/host-app",
+      port: 5173,
+      reuseExistingServer: true,
+      timeout: 120_000
+    }
+  ]
+});
