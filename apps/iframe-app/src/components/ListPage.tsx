@@ -411,14 +411,14 @@ export function ListPage() {
               <col style={{ width: "calc((100% - 26%) / 5)" }} />
             </colgroup>
             <thead className="sticky top-0 z-10">
-              <tr className="border-b border-iframe-border bg-slate-50 text-left text-xs font-medium text-slate-600">
+              <tr className="border-b border-iframe-border bg-slate-50 text-left text-slate-600">
                 <th className="px-4 py-2.5 text-left">
-                  <span className="inline-flex items-center gap-1 rounded text-xs font-medium text-slate-600">Exception</span>
+                  <span className="gt-table-header-text inline-flex items-center gap-1 rounded text-slate-600">Exception</span>
                 </th>
                 <th className="px-4 py-2.5 text-right" aria-sort={sortField === "amount" ? (sortDirection === "desc" ? "descending" : "ascending") : "none"}>
                   <button
                     type="button"
-                    className="inline-flex items-center gap-1 rounded text-xs font-medium text-slate-600 hover:text-slate-900"
+                    className="gt-table-header-text inline-flex items-center gap-1 rounded text-slate-600 hover:text-slate-900"
                     onClick={() => toggleSort("amount")}
                     data-testid="sort-amount"
                   >
@@ -431,7 +431,7 @@ export function ListPage() {
                 <th className="px-4 py-2.5 text-right" aria-sort={sortField === "age" ? (sortDirection === "desc" ? "descending" : "ascending") : "none"}>
                   <button
                     type="button"
-                    className="inline-flex w-full items-center justify-end gap-1 rounded text-xs font-medium text-slate-600 hover:text-slate-900"
+                    className="gt-table-header-text inline-flex w-full items-center justify-end gap-1 rounded text-slate-600 hover:text-slate-900"
                     onClick={() => toggleSort("age")}
                     data-testid="sort-age"
                   >
@@ -442,13 +442,13 @@ export function ListPage() {
                   </button>
                 </th>
                 <th className="px-4 py-2.5 text-left">
-                  <span className="inline-flex items-center gap-1 rounded text-xs font-medium text-slate-600">Review Status</span>
+                  <span className="gt-table-header-text inline-flex items-center gap-1 rounded text-slate-600">Review Status</span>
                 </th>
                 <th className="px-4 py-2.5 text-left">
-                  <span className="inline-flex items-center gap-1 rounded text-xs font-medium text-slate-600">Fix Status</span>
+                  <span className="gt-table-header-text inline-flex items-center gap-1 rounded text-slate-600">Fix Status</span>
                 </th>
                 <th className="px-4 py-2.5 text-left">
-                  <span className="inline-flex items-center gap-1 rounded text-xs font-medium text-slate-600">Order</span>
+                  <span className="gt-table-header-text inline-flex items-center gap-1 rounded text-slate-600">Order</span>
                 </th>
               </tr>
             </thead>

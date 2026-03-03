@@ -235,7 +235,7 @@ describe("DetailPage", () => {
     expect(screen.getByTestId("toggle-order-section")).toHaveAttribute("aria-expanded", "false");
     expect(screen.queryByTestId("order-reference-section")).not.toBeInTheDocument();
     expect(screen.queryByTestId("load-timeline-track")).not.toBeInTheDocument();
-    expect(screen.queryByTestId("order-last-updated")).not.toBeInTheDocument();
+    expect(screen.getByTestId("order-last-updated")).toBeInTheDocument();
 
     fireEvent.click(screen.getByTestId("toggle-order-section"));
     expect(screen.getByTestId("toggle-order-section")).toHaveAttribute("aria-expanded", "true");
@@ -247,7 +247,9 @@ describe("DetailPage", () => {
   it("renders unified order card with embedded timeline and reference metadata", () => {
     renderDetailPage("EX-006");
 
-    expect(screen.getByTestId("order-details-heading")).toHaveTextContent(/^Order \d[A-Z]{2}\d{4}$/);
+    expect(screen.getByTestId("order-details-heading")).toHaveTextContent("Load Info");
+    expect(screen.getByText("Order")).toBeInTheDocument();
+    expect(screen.getByText(/^\d[A-Z]{2}\d{4}$/)).toBeInTheDocument();
     expect(screen.getByText("Customer")).toBeInTheDocument();
     expect(screen.getByText("Origin")).toBeInTheDocument();
     expect(screen.getByText("Destination")).toBeInTheDocument();
@@ -288,7 +290,7 @@ describe("DetailPage", () => {
     renderDetailPage("EX-006");
 
     expect(screen.getByTestId("timeline-column")).toHaveClass("max-w-[220px]");
-    expect(screen.getByTestId("load-timeline-track")).toHaveClass("space-y-4");
+    expect(screen.getByTestId("load-timeline-track")).toHaveClass("space-y-3");
     expect(screen.getByTestId("timeline-milestone-invoiced")).toHaveClass(
       "grid",
       "grid-cols-[minmax(0,1fr)_60px]",
@@ -296,8 +298,8 @@ describe("DetailPage", () => {
       "gap-x-2"
     );
     expect(screen.getByTestId("timeline-value-delivered")).toHaveTextContent("-");
-    expect(screen.getByTestId("timeline-label-tendered")).toHaveClass("text-sm", "font-normal", "leading-6", "text-slate-500");
-    expect(screen.getByTestId("timeline-value-tendered")).toHaveClass("text-right", "text-sm", "font-medium", "leading-6", "text-slate-900");
+    expect(screen.getByTestId("timeline-label-tendered")).toHaveClass("gt-label-text", "text-slate-500");
+    expect(screen.getByTestId("timeline-value-tendered")).toHaveClass("gt-order-value-text", "text-right", "tabular-nums", "text-slate-900");
     expect(screen.queryByTestId("timeline-icon-tendered")).not.toBeInTheDocument();
     expect(screen.queryByTestId("timeline-icon-invoiced")).not.toBeInTheDocument();
     expect(screen.getAllByText("-").length).toBeGreaterThan(0);
