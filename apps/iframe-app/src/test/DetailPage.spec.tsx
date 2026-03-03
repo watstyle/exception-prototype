@@ -176,6 +176,9 @@ describe("DetailPage", () => {
     renderDetailPage("EX-002");
 
     expect(screen.getByTestId("decision-agree")).toHaveAttribute("aria-pressed", "true");
+    expect(screen.getByTestId("decision-compact-row")).toBeInTheDocument();
+    expect(screen.queryByTestId("complete-task-inactive")).not.toBeInTheDocument();
+    expect(screen.getByTestId("go-make-fix")).toHaveAttribute("href", "http://localhost:5173/fix-exception");
     expect(screen.getByTestId("fix-later")).toBeInTheDocument();
     expect(screen.getByTestId("confirm-fixed")).toBeInTheDocument();
     expect(screen.queryByTestId("disagree-controls")).not.toBeInTheDocument();
@@ -192,7 +195,10 @@ describe("DetailPage", () => {
 
     const stickyBar = screen.getByTestId("left-feedback-bar");
     expect(screen.getByTestId("decision-agree")).toHaveAttribute("aria-pressed", "false");
-    expect(within(stickyBar).getByText("Do you agree?")).toBeInTheDocument();
+    expect(within(stickyBar).getByTestId("default-decision-row")).toBeInTheDocument();
+    expect(within(stickyBar).getByText("Reject Exception")).toBeInTheDocument();
+    expect(within(stickyBar).getByText("Confirm Exception")).toBeInTheDocument();
+    expect(within(stickyBar).getByTestId("complete-task-inactive")).toBeDisabled();
     expect(statuses).toHaveTextContent("Pending Review");
     expect(statuses).toHaveTextContent("Pending Fix");
     expect(statuses).not.toHaveTextContent("Validated");
@@ -205,6 +211,7 @@ describe("DetailPage", () => {
     renderDetailPage("EX-003");
 
     expect(screen.getByTestId("decision-disagree")).toHaveAttribute("aria-pressed", "true");
+    expect(screen.getByTestId("decision-compact-row")).toBeInTheDocument();
     expect(screen.getByTestId("disagree-controls")).toBeInTheDocument();
     expect(screen.queryByTestId("fix-later")).not.toBeInTheDocument();
     expect(screen.queryByTestId("confirm-fixed")).not.toBeInTheDocument();
@@ -290,7 +297,7 @@ describe("DetailPage", () => {
     renderDetailPage("EX-006");
 
     expect(screen.getByTestId("timeline-column")).toHaveClass("max-w-[220px]");
-    expect(screen.getByTestId("load-timeline-track")).toHaveClass("space-y-3");
+    expect(screen.getByTestId("load-timeline-track")).toHaveClass("space-y-2");
     expect(screen.getByTestId("timeline-milestone-invoiced")).toHaveClass(
       "grid",
       "grid-cols-[minmax(0,1fr)_60px]",
@@ -326,12 +333,14 @@ describe("DetailPage", () => {
 
     const statuses = screen.getByTestId("detail-status-chips");
     const stickyBar = screen.getByTestId("left-feedback-bar");
-    expect(within(stickyBar).getByText("Do you agree?")).toBeInTheDocument();
+    expect(within(stickyBar).getByTestId("default-decision-row")).toBeInTheDocument();
+    expect(within(stickyBar).getByTestId("complete-task-inactive")).toBeDisabled();
     expect(statuses).toHaveTextContent("Pending Review");
     expect(statuses).toHaveTextContent("Pending Fix");
     expect(within(stickyBar).queryByTestId("go-make-fix")).not.toBeInTheDocument();
 
     fireEvent.click(screen.getByTestId("decision-disagree"));
+    expect(within(stickyBar).getByTestId("decision-compact-row")).toBeInTheDocument();
     expect(within(stickyBar).getByText("Provide Feedback")).toBeInTheDocument();
     expect(statuses).toHaveTextContent("Rejected");
     expect(statuses).not.toHaveTextContent("Pending Fix");
@@ -340,13 +349,15 @@ describe("DetailPage", () => {
     expect(within(stickyBar).queryByTestId("go-make-fix")).not.toBeInTheDocument();
 
     fireEvent.click(screen.getByTestId("decision-disagree"));
-    expect(within(stickyBar).getByText("Do you agree?")).toBeInTheDocument();
+    expect(within(stickyBar).getByTestId("default-decision-row")).toBeInTheDocument();
+    expect(within(stickyBar).getByTestId("complete-task-inactive")).toBeDisabled();
     expect(statuses).toHaveTextContent("Pending Review");
     expect(statuses).toHaveTextContent("Pending Fix");
     expect(screen.queryByTestId("disagree-controls")).not.toBeInTheDocument();
     expect(within(stickyBar).queryByTestId("go-make-fix")).not.toBeInTheDocument();
 
     fireEvent.click(screen.getByTestId("decision-agree"));
+    expect(within(stickyBar).getByTestId("decision-compact-row")).toBeInTheDocument();
     expect(within(stickyBar).getByText("Make the fix")).toBeInTheDocument();
     expect(statuses).toHaveTextContent("Validated");
     expect(statuses).toHaveTextContent("Pending Fix");
@@ -355,7 +366,8 @@ describe("DetailPage", () => {
     expect(within(stickyBar).getByTestId("confirm-fixed")).toBeInTheDocument();
 
     fireEvent.click(screen.getByTestId("decision-agree"));
-    expect(within(stickyBar).getByText("Do you agree?")).toBeInTheDocument();
+    expect(within(stickyBar).getByTestId("default-decision-row")).toBeInTheDocument();
+    expect(within(stickyBar).getByTestId("complete-task-inactive")).toBeDisabled();
     expect(statuses).toHaveTextContent("Pending Review");
     expect(statuses).toHaveTextContent("Pending Fix");
     expect(within(stickyBar).queryByTestId("go-make-fix")).not.toBeInTheDocument();

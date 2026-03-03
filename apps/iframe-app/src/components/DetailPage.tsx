@@ -619,7 +619,7 @@ export function DetailPage() {
                       {isOrderSectionOpen && (
                         <>
                           <div className="mt-4 grid gap-5 lg:grid-cols-[minmax(0,1fr)_248px]">
-                            <div className="space-y-3" data-testid="order-reference-section">
+                            <div className="space-y-2" data-testid="order-reference-section">
                               <div className="grid min-h-[24px] grid-cols-[150px_minmax(0,1fr)] items-center gap-x-4">
                                 <span className="gt-label-text text-slate-500">Order</span>
                                 <div className="group/copy flex min-w-0 max-w-full items-center gap-1" data-copy-group>
@@ -694,7 +694,7 @@ export function DetailPage() {
                             </div>
 
                             <aside className="min-w-0 w-full max-w-[220px] justify-self-start" data-testid="timeline-column">
-                              <ul className="space-y-3" data-testid="load-timeline-track">
+                              <ul className="space-y-2" data-testid="load-timeline-track">
                                 {detailFixture.timeline.map((milestone) => {
                                   const milestoneKey = milestone.label.toLowerCase().replace(/\s+/g, "-");
                                   const milestoneDate = milestone.datetime;
@@ -746,7 +746,12 @@ export function DetailPage() {
                               <tr>
                                 <th className="gt-table-header-text px-3 py-2.5 text-left">Charge</th>
                                 <th className="gt-table-header-text px-3 py-2.5 text-right">Billed (TMS)</th>
-                                <th className="gt-table-header-text px-3 py-2.5 text-right">Expected (GT)</th>
+                                <th className="gt-table-header-text px-3 py-2.5 text-right">
+                                  <span className="inline-flex w-full items-center justify-end gap-1">
+                                    <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+                                    <span>Expected (GT)</span>
+                                  </span>
+                                </th>
                                 <th className="gt-table-header-text px-3 py-2.5 text-right">Variance</th>
                               </tr>
                             </thead>
@@ -861,108 +866,121 @@ export function DetailPage() {
               data-testid="left-feedback-bar"
             >
               {/*
-                Footer control row behavior:
-                - Neutral: two full-width choice buttons (Agree/Disagree)
-                - Active choice: compact icon-only toggles + Fix action
+                Bottom bar behavior:
+                - Default: explicit decision buttons + inactive completion row
+                - Selected: compact decision toggles in a right-aligned row
+                - Agree: tertiary/secondary/primary completion actions
+                - Disagree: note entry + send-and-close action
               */}
-              {(() => {
-                const compactDecisionButtons = decision !== null;
-                const showFixInOrders = decision === "agree";
-                const showDecisionSeparator = decision === "agree";
-                return (
-                  <div className="flex flex-wrap items-center justify-between gap-2">
-                    <h3 className="text-base font-semibold text-slate-900">{feedbackPrompt}</h3>
-                    <div className="ml-auto flex items-center">
-                      <div className="flex items-stretch gap-2" role="radiogroup" aria-label="Do you agree">
-                        <div className="relative inline-flex">
-                          <button
-                            type="button"
-                            onClick={() => handleDecisionChange("disagree")}
-                            data-testid="decision-disagree"
-                            className={`peer inline-flex h-10 items-center justify-center rounded-md border-2 text-sm font-medium ${
-                              compactDecisionButtons ? "w-10 px-0" : "w-[116px] shrink-0 px-3"
-                            } ${
-                              decision === "disagree"
-                                ? "border-rose-200 bg-rose-50 text-rose-700"
-                                : "border-[#D9D9D9] bg-white text-slate-600 hover:border-rose-200 hover:bg-rose-50"
-                            }`}
-                            aria-pressed={decision === "disagree"}
-                            aria-label="Disagree"
-                          >
-                            <DecisionThumbIcon direction="down" />
-                            {!compactDecisionButtons && <span className="ml-1.5">Disagree</span>}
-                          </button>
-                          <span
-                            role="tooltip"
-                            aria-hidden="true"
-                            className="pointer-events-none absolute bottom-full left-1/2 z-20 mb-1 hidden -translate-x-1/2 whitespace-nowrap rounded-md border border-slate-700 bg-slate-900 px-2 py-1 text-[11px] font-medium text-white shadow-lg peer-hover:block peer-focus-visible:block"
-                          >
-                            Disagree
-                          </span>
-                        </div>
-                        <div className="relative inline-flex">
-                          <button
-                            type="button"
-                            onClick={() => handleDecisionChange("agree")}
-                            data-testid="decision-agree"
-                            className={`peer inline-flex h-10 items-center justify-center rounded-md border-2 text-sm font-medium ${
-                              compactDecisionButtons ? "w-10 px-0" : "w-[116px] shrink-0 px-3"
-                            } ${
-                              decision === "agree"
-                                ? "border-emerald-200 bg-emerald-50 text-emerald-700"
-                                : "border-[#D9D9D9] bg-white text-slate-600 hover:border-emerald-200 hover:bg-emerald-50"
-                            }`}
-                            aria-pressed={decision === "agree"}
-                            aria-label="Agree"
-                          >
-                            <DecisionThumbIcon direction="up" />
-                            {!compactDecisionButtons && <span className="ml-1.5">Agree</span>}
-                          </button>
-                          <span
-                            role="tooltip"
-                            aria-hidden="true"
-                            className="pointer-events-none absolute bottom-full left-1/2 z-20 mb-1 hidden -translate-x-1/2 whitespace-nowrap rounded-md border border-slate-700 bg-slate-900 px-2 py-1 text-[11px] font-medium text-white shadow-lg peer-hover:block peer-focus-visible:block"
-                          >
-                            Agree
-                          </span>
-                        </div>
-                      </div>
-                      {showDecisionSeparator && <span className="mx-2 h-6 w-px bg-slate-200" aria-hidden="true" />}
-                      {showFixInOrders && (
-                        <a
-                          href={getFixNavigationUrl()}
-                          target="_blank"
-                          rel="noreferrer noopener"
-                          className="inline-flex h-10 w-[240px] shrink-0 items-center justify-center gap-1.5 rounded-md border-2 border-[#D9D9D9] bg-white px-3 text-sm font-medium text-slate-700 hover:bg-slate-50"
-                          data-testid="go-make-fix"
-                        >
-                          Fix in Orders
-                          <svg viewBox="0 0 20 20" fill="none" aria-hidden="true" className="h-3.5 w-3.5 stroke-current stroke-[1.6]">
-                            <path d="M11 4h5v5" />
-                            <path d="m10 10 6-6" />
-                            <path d="M9 5H5a1 1 0 0 0-1 1v9a1 1 0 0 0 1 1h9a1 1 0 0 0 1-1v-4" />
-                          </svg>
-                        </a>
-                      )}
-                    </div>
-                  </div>
-                );
-              })()}
-              {decision === "agree" && (
-                <div className="mt-3 border-t border-slate-200/80 pt-4">
-                  <div className="grid grid-cols-2 gap-2">
+              {decision !== null && (
+                <div className="mb-3 flex items-center justify-between gap-3" data-testid="decision-compact-row">
+                  <span className="text-sm font-semibold text-slate-700">{feedbackPrompt}</span>
+                  <div className="ml-auto flex items-stretch gap-2" role="radiogroup" aria-label="Review decision">
                     <button
                       type="button"
-                      onClick={() => handleTerminalAction("fix-later")}
-                      className="w-full rounded-md border-2 border-[#D9D9D9] bg-white px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
-                      data-testid="fix-later"
+                      onClick={() => handleDecisionChange("disagree")}
+                      data-testid="decision-disagree"
+                      className={`inline-flex h-10 w-10 items-center justify-center rounded-md border-2 text-sm font-medium ${
+                        decision === "disagree"
+                          ? "border-rose-200 bg-rose-50 text-rose-700"
+                          : "border-[#D9D9D9] bg-white text-slate-600 hover:border-rose-200 hover:bg-rose-50"
+                      }`}
+                      aria-pressed={decision === "disagree"}
+                      aria-label="Reject Exception"
                     >
-                      Fix Later
+                      <DecisionThumbIcon direction="down" />
                     </button>
                     <button
                       type="button"
+                      onClick={() => handleDecisionChange("agree")}
+                      data-testid="decision-agree"
+                      className={`inline-flex h-10 w-10 items-center justify-center rounded-md border-2 text-sm font-medium ${
+                        decision === "agree"
+                          ? "border-emerald-200 bg-emerald-50 text-emerald-700"
+                          : "border-[#D9D9D9] bg-white text-slate-600 hover:border-emerald-200 hover:bg-emerald-50"
+                      }`}
+                      aria-pressed={decision === "agree"}
+                      aria-label="Confirm Exception"
+                    >
+                      <DecisionThumbIcon direction="up" />
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {decision === null && (
+                <div className="space-y-3">
+                  <div className="grid grid-cols-2 gap-2" data-testid="default-decision-row">
+                    <button
+                      type="button"
+                      onClick={() => handleDecisionChange("disagree")}
+                      data-testid="decision-disagree"
+                      className="inline-flex h-10 w-full items-center justify-center gap-1.5 rounded-md border-2 border-[#D9D9D9] bg-white px-3 text-sm font-medium text-slate-700 hover:border-rose-200 hover:bg-rose-50"
+                      aria-pressed="false"
+                      aria-label="Reject Exception"
+                    >
+                      <DecisionThumbIcon direction="down" />
+                      <span>Reject Exception</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleDecisionChange("agree")}
+                      data-testid="decision-agree"
+                      className="inline-flex h-10 w-full items-center justify-center gap-1.5 rounded-md border-2 border-[#D9D9D9] bg-white px-3 text-sm font-medium text-slate-700 hover:border-emerald-200 hover:bg-emerald-50"
+                      aria-pressed="false"
+                      aria-label="Confirm Exception"
+                    >
+                      <DecisionThumbIcon direction="up" />
+                      <span>Confirm Exception</span>
+                    </button>
+                  </div>
+                  <button
+                    type="button"
+                    disabled
+                    aria-disabled="true"
+                    className="w-full cursor-not-allowed rounded-md border-2 border-slate-200 bg-slate-100 px-3 py-2 text-sm font-medium text-slate-400"
+                    data-testid="complete-task-inactive"
+                  >
+                    Complete Task
+                  </button>
+                </div>
+              )}
+
+              {decision === "agree" && (
+                <div className="mt-1" data-testid="agree-controls">
+                  <div className="grid grid-cols-3 gap-2">
+                    <button
+                      type="button"
+                      onClick={() => handleTerminalAction("fix-later")}
+                      className="inline-flex w-full items-center justify-center gap-1.5 rounded-md border border-transparent bg-transparent px-3 py-2 text-sm font-medium text-slate-600 hover:bg-slate-100"
+                      data-testid="fix-later"
+                    >
+                      <svg viewBox="0 0 20 20" fill="none" aria-hidden="true" className="h-3.5 w-3.5 stroke-current stroke-[1.6]">
+                        <path d="M7 3H3v4" strokeLinecap="round" strokeLinejoin="round" />
+                        <path d="m3 3 3 3" strokeLinecap="round" strokeLinejoin="round" />
+                        <circle cx="10.5" cy="11" r="5.5" />
+                        <path d="M10.5 8.5v2.8l2 1.2" strokeLinecap="round" strokeLinejoin="round" />
+                      </svg>
+                      Fix Later
+                    </button>
+                    <a
+                      href={getFixNavigationUrl()}
+                      target="_blank"
+                      rel="noreferrer noopener"
+                      className="inline-flex w-full items-center justify-center gap-1.5 rounded-md border-2 border-[#D9D9D9] bg-white px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
+                      data-testid="go-make-fix"
+                    >
+                      Fix in Orders
+                      <svg viewBox="0 0 20 20" fill="none" aria-hidden="true" className="h-3.5 w-3.5 stroke-current stroke-[1.6]">
+                        <path d="M11 4h5v5" />
+                        <path d="m10 10 6-6" />
+                        <path d="M9 5H5a1 1 0 0 0-1 1v9a1 1 0 0 0 1 1h9a1 1 0 0 0 1-1v-4" />
+                      </svg>
+                    </a>
+                    <button
+                      type="button"
                       onClick={() => handleTerminalAction("confirm-fixed")}
-                      className="inline-flex w-full items-center justify-center gap-1.5 rounded-md border-2 border-[#C9CCFF] bg-[#EEF0FF] px-3 py-2 text-sm font-medium text-[#3F43A3] hover:bg-[#E3E7FF]"
+                      className="inline-flex w-full items-center justify-center gap-1.5 rounded-md bg-[#5B5FC7] px-3 py-2 text-sm font-medium text-white hover:bg-[#4F53B7]"
                       data-testid="confirm-fixed"
                     >
                       <DetailChipIcon icon="check" />
@@ -971,8 +989,9 @@ export function DetailPage() {
                   </div>
                 </div>
               )}
+
               {decision === "disagree" && (
-                <div className="mt-3 pt-1" data-testid="disagree-controls">
+                <div className="mt-1 space-y-3" data-testid="disagree-controls">
                   <textarea
                     id="disagree-note"
                     ref={disagreeNoteRef}
@@ -983,16 +1002,18 @@ export function DetailPage() {
                     placeholder="Additional Notes..."
                     data-testid="disagree-note"
                   />
-                  <div className="mt-3 border-t border-slate-200/80 pt-4">
-                    <button
-                      type="button"
-                      onClick={() => handleTerminalAction("disagree-feedback")}
-                      className="w-full rounded-md border-2 border-[#C9CCFF] bg-[#EEF0FF] px-3 py-2 text-sm font-medium text-[#3F43A3] hover:bg-[#E3E7FF]"
-                      data-testid="close-submit-feedback"
-                    >
-                      Submit Feedback and Close
-                    </button>
-                  </div>
+                  <button
+                    type="button"
+                    onClick={() => handleTerminalAction("disagree-feedback")}
+                    className="inline-flex w-full items-center justify-center gap-1.5 rounded-md bg-[#5B5FC7] px-3 py-2 text-sm font-medium text-white hover:bg-[#4F53B7]"
+                    data-testid="close-submit-feedback"
+                  >
+                    <svg viewBox="0 0 20 20" fill="none" aria-hidden="true" className="h-3.5 w-3.5 stroke-current stroke-[1.6]">
+                      <path d="M3 10 17 3l-3 14-4.5-4.5L3 10Z" strokeLinecap="round" strokeLinejoin="round" />
+                      <path d="M17 3 9.5 12.5" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                    Send and Close
+                  </button>
                 </div>
               )}
             </div>
